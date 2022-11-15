@@ -2,23 +2,24 @@
 
 namespace App\Controllers;
 
-use App\Models\User;
+use App\Repository\UserRepository;
 use Laminas\Diactoros\Response;
-use App\Services\Db;
 use App\Views\View;
 
 class MainController
 {
-    private $view;
+    private View $view;
+    private UserRepository $user;
 
-    public function __construct()
+    public function __construct(View $view, UserRepository $user)
     {
-        $this->view = new View(__DIR__ . '/../../templates');
+        $this->view = $view;
+        $this->user = $user;
     }
 
-    public function show()
+    public function show(): Response\HtmlResponse
     {
-        $users = User::selectAll();
+        $users = $this->user->selectAll();
 
         return new Response\HtmlResponse($this->view->render('main', compact('users')));
     }

@@ -1,6 +1,9 @@
 <?php
 
 use App\Controllers\UserController;
+use App\Repository\UserRepository;
+use App\Services\Db;
+use App\Views\View;
 use League\Route\Router;
 use App\Controllers\MainController;
 
@@ -9,8 +12,26 @@ $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
     $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
 );
 
-$mainController = new MainController();
-$userController = new UserController();
+$dbSettings = (require __DIR__ . '/settings.php')['db'];
+
+$mainController = new MainController(new View(__DIR__ . '/../templates'),
+    new UserRepository(
+        new Db(
+            new PDO('mysql:host=' . $dbSettings['host'] . ';dbname=' . $dbSettings['dbname'],
+                $dbSettings['user'],
+                $dbSettings['password'])
+        )
+    ));
+
+$userController = new UserController(new View(__DIR__ . '/../templates'),
+    new UserRepository(
+        new Db(
+            new PDO('mysql:host=' . $dbSettings['host'] . ';dbname=' . $dbSettings['dbname'],
+                $dbSettings['user'],
+                $dbSettings['password'])
+        )
+    ));
+
 
 $router->get('/', [$mainController, 'show']);
 $router->get('/create', [$userController, 'createForm']);

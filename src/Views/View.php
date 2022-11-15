@@ -4,7 +4,7 @@ namespace App\Views;
 
 class View
 {
-    private $templatePath;
+    private string $templatePath;
 
     public function __construct(string $templatePath)
     {
