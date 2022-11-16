@@ -7,30 +7,42 @@ use App\Views\View;
 use League\Route\Router;
 use App\Controllers\MainController;
 
-$router = new Router;
+$router = new Router();
 $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
-    $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
+    $_SERVER,
+    $_GET,
+    $_POST,
+    $_COOKIE,
+    $_FILES
 );
 
 $dbSettings = (require __DIR__ . '/settings.php')['db'];
 
-$mainController = new MainController(new View(__DIR__ . '/../templates'),
+$mainController = new MainController(
+    new View(__DIR__ . '/../templates'),
     new UserRepository(
         new Db(
-            new PDO('mysql:host=' . $dbSettings['host'] . ';dbname=' . $dbSettings['dbname'],
+            new PDO(
+                'mysql:host=' . $dbSettings['host'] . ';dbname=' . $dbSettings['dbname'],
                 $dbSettings['user'],
-                $dbSettings['password'])
+                $dbSettings['password']
+            )
         )
-    ));
+    )
+);
 
-$userController = new UserController(new View(__DIR__ . '/../templates'),
+$userController = new UserController(
+    new View(__DIR__ . '/../templates'),
     new UserRepository(
         new Db(
-            new PDO('mysql:host=' . $dbSettings['host'] . ';dbname=' . $dbSettings['dbname'],
+            new PDO(
+                'mysql:host=' . $dbSettings['host'] . ';dbname=' . $dbSettings['dbname'],
                 $dbSettings['user'],
-                $dbSettings['password'])
+                $dbSettings['password']
+            )
         )
-    ));
+    )
+);
 
 
 $router->get('/', [$mainController, 'show']);
@@ -43,4 +55,4 @@ $router->post('/{id:number}/delete', [$userController, 'deleteUser']);
 
 $response = $router->dispatch($request);
 
-(new Laminas\HttpHandlerRunner\Emitter\SapiEmitter)->emit($response);
+(new Laminas\HttpHandlerRunner\Emitter\SapiEmitter())->emit($response);

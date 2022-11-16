@@ -14,8 +14,14 @@ class User
     private string $status;
     private ?string $imageName;
 
-    public function __construct(int $id, string $email, string $name, string $gender, string $status,
-                                ?string $imageName)
+    public function __construct(
+        int $id,
+        string $email,
+        string $name,
+        string $gender,
+        string $status,
+        ?string $imageName
+    )
     {
         $this->id = $id;
         $this->email = $email;

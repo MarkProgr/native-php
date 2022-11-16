@@ -57,8 +57,10 @@ class UserControllerTest extends TestCase
 
         $userController = new UserController($this->viewMock, $this->userRepMock);
 
-        $this->assertInstanceOf(RedirectResponse::class, $userController->editUser($serverReqMock,
-            ['id' => '1', 'email' => '2', 'name' => '3', 'gender' => '4', 'status' => '5']));
+        $this->assertInstanceOf(RedirectResponse::class, $userController->editUser(
+            $serverReqMock,
+            ['id' => '1', 'email' => '2', 'name' => '3', 'gender' => '4', 'status' => '5']
+        ));
     }
 
     public function testDeleteUser()

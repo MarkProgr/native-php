@@ -2,3 +2,4 @@
 /.idea/
 /.phpunit.result.cache
 /uploads/
+/.php-cs-fixer.cache

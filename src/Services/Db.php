@@ -24,4 +24,3 @@ class Db
         return $statement->fetchAll();
     }
 }
-
