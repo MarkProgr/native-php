@@ -27,6 +27,9 @@
         <p class="card-text">Name: <?= $user->getName() ?></p>
         <p class="card-text">Gender: <?= $user->getGender() ?></p>
         <p class="card-text">Status: <?= $user->getStatus() ?></p>
+        <?php if ($user->getImageName()): ?>
+        <img height="300" src="/uploads/<?= $user->getImageName() ?>">
+        <?php endif; ?>
     </div>
 </div>
 </body>

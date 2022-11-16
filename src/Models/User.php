@@ -12,14 +12,17 @@ class User
     private string $name;
     private string $gender;
     private string $status;
+    private ?string $imageName;
 
-    public function __construct(int $id, string $email, string $name, string $gender, string $status)
+    public function __construct(int $id, string $email, string $name, string $gender, string $status,
+                                ?string $imageName)
     {
         $this->id = $id;
         $this->email = $email;
         $this->name = $name;
         $this->gender = $gender;
         $this->status = $status;
+        $this->imageName = $imageName;
     }
 
     public function getId(): int
@@ -45,5 +48,10 @@ class User
     public function getStatus(): string
     {
         return $this->status;
+    }
+
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
     }
 }
