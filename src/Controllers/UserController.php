@@ -51,6 +51,7 @@ class UserController
     public function createUser(): Response\RedirectResponse
     {
         $this->user->create($_POST);
+//        var_dump($this->user);
 
         return new Response\RedirectResponse('/');
     }

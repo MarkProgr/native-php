@@ -18,7 +18,7 @@
         </div>
     </div>
 </nav>
-<form id="form" method="post" action="/create">
+<form id="form" method="post" action="/create" enctype="multipart/form-data">
     <div class="mb-3">
         <label for="email" class="form-label">Email address</label>
         <input id="email" type="email" name="email" class="form-control field">
@@ -40,6 +40,10 @@
             <option value="Active">Active</option>
             <option value="Inactive">Inactive</option>
         </select>
+    </div>
+    <div class="mb-3">
+        <label for="formFile" class="form-label">Put the photo</label>
+        <input class="form-control" name="image" type="file" id="formFile">
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
