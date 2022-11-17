@@ -10,7 +10,8 @@
         "league/route": "^5.1",
         "laminas/laminas-diactoros": "^2.17",
         "laminas/laminas-httphandlerrunner": "^2.2",
-        "friendsofphp/php-cs-fixer": "^3.13"
+        "friendsofphp/php-cs-fixer": "^3.13",
+        "twig/twig": "^3.0"
     },
     "autoload": {
         "psr-4": {

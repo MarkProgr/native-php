@@ -4,16 +4,16 @@ namespace App\Controllers;
 
 use App\Repository\UserRepository;
 use Laminas\Diactoros\Response;
-use App\Views\View;
+use Twig\Environment;
 
 class MainController
 {
-    private View $view;
+    private Environment $twig;
     private UserRepository $user;
 
-    public function __construct(View $view, UserRepository $user)
+    public function __construct(Environment $twig, UserRepository $user)
     {
-        $this->view = $view;
+        $this->twig = $twig;
         $this->user = $user;
     }
 
@@ -21,6 +21,6 @@ class MainController
     {
         $users = $this->user->selectAll();
 
-        return new Response\HtmlResponse($this->view->render('main', compact('users')));
+        return new Response\HtmlResponse($this->twig->render('main.php', compact('users')));
     }
 }

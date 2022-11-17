@@ -2,14 +2,16 @@
 
 use App\Controllers\SiteUserController;
 use App\Controllers\UserController;
-use App\Controllers\UserSiteController;
 use App\Middlewares\AuthMiddleware;
 use App\Repository\SiteUserRepository;
 use App\Repository\UserRepository;
 use App\Services\Db;
-use App\Views\View;
 use League\Route\Router;
 use App\Controllers\MainController;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+
+session_start();
 
 $router = new Router();
 $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
@@ -21,42 +23,38 @@ $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
 );
 
 $dbSettings = (require __DIR__ . '/settings.php')['db'];
+$pdo = new PDO(
+    'mysql:host=' . $dbSettings['host'] . ';dbname=' . $dbSettings['dbname'],
+    $dbSettings['user'],
+    $dbSettings['password']
+);
+
+$twig = new Environment(new FilesystemLoader(__DIR__ . '/../templates'));
+$twig->addGlobal('sessionId', $_SESSION['id']);
 
 $mainController = new MainController(
-    new View(__DIR__ . '/../templates'),
+    $twig,
     new UserRepository(
         new Db(
-            new PDO(
-                'mysql:host=' . $dbSettings['host'] . ';dbname=' . $dbSettings['dbname'],
-                $dbSettings['user'],
-                $dbSettings['password']
-            )
+            $pdo
         )
     )
 );
 
 $userController = new UserController(
-    new View(__DIR__ . '/../templates'),
+    $twig,
     new UserRepository(
         new Db(
-            new PDO(
-                'mysql:host=' . $dbSettings['host'] . ';dbname=' . $dbSettings['dbname'],
-                $dbSettings['user'],
-                $dbSettings['password']
-            )
+            $pdo
         )
     )
 );
 
 $siteUserController = new SiteUserController(
-    new View(__DIR__ . '/../templates'),
+    $twig,
     new SiteUserRepository(
         new Db(
-            new PDO(
-                'mysql:host=' . $dbSettings['host'] . ';dbname=' . $dbSettings['dbname'],
-                $dbSettings['user'],
-                $dbSettings['password']
-            )
+            $pdo
         )
     )
 );
@@ -72,6 +70,8 @@ $router->post('/{id:number}/delete', [$userController, 'deleteUser'])->middlewar
 $router->get('/login', [$siteUserController, 'authForm']);
 $router->post('/login', [$siteUserController, 'login']);
 $router->post('/logout', [$siteUserController, 'logout'])->middleware(new AuthMiddleware());
+$router->get('/sign-up', [$siteUserController, 'signUpForm']);
+$router->post('/sign-up', [$siteUserController, 'signUp']);
 
 $response = $router->dispatch($request);
 

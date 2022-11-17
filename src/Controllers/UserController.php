@@ -3,26 +3,24 @@
 namespace App\Controllers;
 
 use App\Repository\UserRepository;
-use App\Views\View;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\ServerRequest;
-use Laminas\Diactoros\UploadedFile;
-use Psr\Http\Message\ServerRequestInterface;
+use Twig\Environment;
 
 class UserController
 {
-    private View $view;
+    private Environment $twig;
     private UserRepository $user;
 
-    public function __construct(View $view, UserRepository $user)
+    public function __construct(Environment $twig, UserRepository $user)
     {
-        $this->view = $view;
+        $this->twig = $twig;
         $this->user = $user;
     }
 
     public function createForm(): Response
     {
-        return new Response\HtmlResponse($this->view->render('create-form'));
+        return new Response\HtmlResponse($this->twig->render('create-form.php'));
     }
 
     public function showOne(ServerRequest $request, array $params): Response\HtmlResponse
@@ -30,10 +28,10 @@ class UserController
         $user = $this->user->selectById($params);
 
         if (!$user) {
-            return new Response\HtmlResponse($this->view->render('not-found'), 404);
+            return new Response\HtmlResponse($this->twig->render('not-found.php'), 404);
         }
 
-        return new Response\HtmlResponse($this->view->render('show-one', compact('user')));
+        return new Response\HtmlResponse($this->twig->render('show-one.php', compact('user')));
     }
 
     public function editForm(ServerRequest $request, array $params): Response\HtmlResponse
@@ -41,10 +39,10 @@ class UserController
         $user = $this->user->selectById($params);
 
         if (!$user) {
-            return new Response\HtmlResponse($this->view->render('not-found'), 404);
+            return new Response\HtmlResponse($this->twig->render('not-found.php'), 404);
         }
 
-        return new Response\HtmlResponse($this->view->render('edit-form', compact('user')));
+        return new Response\HtmlResponse($this->twig->render('edit-form.php', compact('user')));
     }
 
     public function createUser(ServerRequest $request): Response\RedirectResponse

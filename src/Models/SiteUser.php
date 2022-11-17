@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use DateTime;
-
 class SiteUser
 {
     private int $id;
