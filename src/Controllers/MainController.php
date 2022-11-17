@@ -17,7 +17,7 @@ class MainController
         $this->user = $user;
     }
 
-    public function show(): Response\HtmlResponse
+    public function show(): Response
     {
         $users = $this->user->selectAll();
 

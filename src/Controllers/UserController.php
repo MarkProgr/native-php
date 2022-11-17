@@ -2,13 +2,12 @@
 
 namespace App\Controllers;
 
-use App\Models\User;
 use App\Repository\UserRepository;
 use App\Views\View;
 use Laminas\Diactoros\Response;
-use App\Services\Db;
 use Laminas\Diactoros\ServerRequest;
-use Psr\Http\Message\ResponseInterface;
+use Laminas\Diactoros\UploadedFile;
+use Psr\Http\Message\ServerRequestInterface;
 
 class UserController
 {
@@ -21,7 +20,7 @@ class UserController
         $this->user = $user;
     }
 
-    public function createForm(): Response\HtmlResponse
+    public function createForm(): Response
     {
         return new Response\HtmlResponse($this->view->render('create-form'));
     }
@@ -48,17 +47,20 @@ class UserController
         return new Response\HtmlResponse($this->view->render('edit-form', compact('user')));
     }
 
-    public function createUser(): Response\RedirectResponse
+    public function createUser(ServerRequest $request): Response\RedirectResponse
     {
-        $this->user->create($_POST);
-//        var_dump($this->user);
+        $uniqueImageName = $this->generateImageName($request);
+
+        $this->user->create($request->getParsedBody(), $uniqueImageName);
 
         return new Response\RedirectResponse('/');
     }
 
     public function editUser(ServerRequest $request, array $params): Response\RedirectResponse
     {
-        $this->user->update($params['id'], $_POST);
+        $uniqueImageName = $this->generateImageName($request);
+
+        $this->user->update($params['id'], $request->getParsedBody(), $uniqueImageName);
 
         return new Response\RedirectResponse('/');
     }
@@ -68,5 +70,23 @@ class UserController
         $this->user->delete($params);
 
         return new Response\RedirectResponse('/');
+    }
+
+    public function generateImageName(ServerRequest $request): ?string
+    {
+        $uploadedFile = $request->getUploadedFiles();
+        $file = $uploadedFile['image'];
+
+        if (!$file->getClientFilename()) {
+            return null;
+        }
+
+        $imageName = $file->getClientFilename();
+        $uniqueImageName = md5(uniqid($imageName)) . strstr($imageName, '.');
+
+        $newTmpName = __DIR__ . '/../../public/uploads/' . $uniqueImageName;
+        $file->moveTo($newTmpName);
+
+        return $uniqueImageName;
     }
 }
