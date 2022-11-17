@@ -21,10 +21,6 @@ class MainController
     {
         $users = $this->user->selectAll();
 
-        if (!$_COOKIE) {
-            return new Response\RedirectResponse('/login');
-        }
-
         return new Response\HtmlResponse($this->view->render('main', compact('users')));
     }
 }

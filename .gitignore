@@ -1,5 +1,5 @@
 /vendor/
 /.idea/
 /.phpunit.result.cache
-/uploads/
+/public/uploads/
 /.php-cs-fixer.cache

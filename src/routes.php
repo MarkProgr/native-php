@@ -3,6 +3,7 @@
 use App\Controllers\SiteUserController;
 use App\Controllers\UserController;
 use App\Controllers\UserSiteController;
+use App\Middlewares\AuthMiddleware;
 use App\Repository\SiteUserRepository;
 use App\Repository\UserRepository;
 use App\Services\Db;
@@ -61,16 +62,16 @@ $siteUserController = new SiteUserController(
 );
 
 
-$router->get('/', [$mainController, 'show']);
-$router->get('/create', [$userController, 'createForm']);
-$router->get('/{id:number}', [$userController, 'showOne']);
-$router->get('/{id:number}/edit', [$userController, 'editForm']);
-$router->post('/create', [$userController, 'createUser']);
-$router->post('/{id:number}/edit', [$userController, 'editUser']);
-$router->post('/{id:number}/delete', [$userController, 'deleteUser']);
+$router->get('/', [$mainController, 'show'])->middleware(new AuthMiddleware());
+$router->get('/create', [$userController, 'createForm'])->middleware(new AuthMiddleware());
+$router->get('/{id:number}', [$userController, 'showOne'])->middleware(new AuthMiddleware());
+$router->get('/{id:number}/edit', [$userController, 'editForm'])->middleware(new AuthMiddleware());
+$router->post('/create', [$userController, 'createUser'])->middleware(new AuthMiddleware());
+$router->post('/{id:number}/edit', [$userController, 'editUser'])->middleware(new AuthMiddleware());
+$router->post('/{id:number}/delete', [$userController, 'deleteUser'])->middleware(new AuthMiddleware());
 $router->get('/login', [$siteUserController, 'authForm']);
 $router->post('/login', [$siteUserController, 'login']);
-$router->post('/logout', [$siteUserController, 'logout']);
+$router->post('/logout', [$siteUserController, 'logout'])->middleware(new AuthMiddleware());
 
 $response = $router->dispatch($request);
 

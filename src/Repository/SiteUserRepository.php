@@ -38,6 +38,8 @@ class SiteUserRepository
 
         session_start();
 
+        $_SESSION = ['id' => $siteUser[0]['id']];
+
         return true;
     }
 

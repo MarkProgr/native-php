@@ -7,10 +7,11 @@
                     <a class="nav-link active" aria-current="page" href="/create">Create User</a>
                 </li>
             </ul>
-            <?php if (!$_COOKIE): ?>
+            <?php session_start();
+            if (empty($_SESSION)):?>
             <a class="btn btn-light" href="/login">Login</a>
             <?php endif; ?>
-            <?php if ($_COOKIE): ?>
+            <?php if (!empty($_SESSION)): ?>
             <form method="post" action="/logout">
                 <button class="btn btn-danger" type="submit">Logout</button>
             </form>

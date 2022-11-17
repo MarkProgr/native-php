@@ -7,6 +7,7 @@ use App\Views\View;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
+use Laminas\Diactoros\ServerRequest;
 
 class SiteUserController
 {
@@ -24,9 +25,9 @@ class SiteUserController
         return new HtmlResponse($this->view->render('login'));
     }
 
-    public function login(): Response
+    public function login(ServerRequest $request): Response
     {
-        $user = $this->siteUser->login($_POST);
+        $user = $this->siteUser->login($request->getParsedBody());
 
         if ($user === null) {
             $error = 'Invalid login or password';

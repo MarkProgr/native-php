@@ -55,10 +55,8 @@ class UserRepository
         );
     }
 
-    public function update(int $id, array $params): void
+    public function update(int $id, array $params, ?string $uniqueImageName): void
     {
-        $uniqueImageName = $this->generateImageName();
-
         $this->db->query(
             "UPDATE users SET email = :email, name = :name, 
                  gender = :gender, status = :status, image_name = :imageName WHERE id = :id",
@@ -72,10 +70,8 @@ class UserRepository
         );
     }
 
-    public function create(array $params): void
+    public function create(array $params, ?string $uniqueImageName): void
     {
-        $uniqueImageName = $this->generateImageName();
-
         $this->db->query(
             "INSERT INTO users (email, name, gender, status, image_name) VALUES 
                                                             (:email, :name, :gender, :status, :imageName)",
@@ -97,7 +93,7 @@ class UserRepository
         );
 
         if ($imageName[0]['image_name']) {
-            $usersImageName = __DIR__ . '/../../uploads/' . $imageName[0]['image_name'];
+            $usersImageName = __DIR__ . '/../../public/uploads/' . $imageName[0]['image_name'];
             unlink($usersImageName);
         }
 
@@ -106,21 +102,5 @@ class UserRepository
             [':id' => $params['id']],
             static::class
         );
-    }
-
-    public function generateImageName(): ?string
-    {
-        $tmpName = $_FILES['image']['tmp_name'];
-        $imageName = $_FILES['image']['name'];
-        $uniqueImageName = md5(uniqid($imageName)) . strstr($imageName, '.');
-
-        $newTmpName = __DIR__ . '/../../uploads/' . $uniqueImageName;
-        move_uploaded_file($tmpName, $newTmpName);
-
-        if (!$_FILES['image']['name']) {
-            return null;
-        }
-
-        return $uniqueImageName;
     }
 }
