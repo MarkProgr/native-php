@@ -17,9 +17,13 @@ class MainController
         $this->user = $user;
     }
 
-    public function show(): Response\HtmlResponse
+    public function show(): Response
     {
         $users = $this->user->selectAll();
+
+        if (!$_COOKIE) {
+            return new Response\RedirectResponse('/login');
+        }
 
         return new Response\HtmlResponse($this->view->render('main', compact('users')));
     }

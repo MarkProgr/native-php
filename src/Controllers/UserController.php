@@ -2,13 +2,10 @@
 
 namespace App\Controllers;
 
-use App\Models\User;
 use App\Repository\UserRepository;
 use App\Views\View;
 use Laminas\Diactoros\Response;
-use App\Services\Db;
 use Laminas\Diactoros\ServerRequest;
-use Psr\Http\Message\ResponseInterface;
 
 class UserController
 {
@@ -21,8 +18,12 @@ class UserController
         $this->user = $user;
     }
 
-    public function createForm(): Response\HtmlResponse
+    public function createForm(): Response
     {
+        if (!$_COOKIE) {
+            return new Response\RedirectResponse('/login');
+        }
+
         return new Response\HtmlResponse($this->view->render('create-form'));
     }
 

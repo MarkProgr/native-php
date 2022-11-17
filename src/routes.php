@@ -1,6 +1,9 @@
 <?php
 
+use App\Controllers\SiteUserController;
 use App\Controllers\UserController;
+use App\Controllers\UserSiteController;
+use App\Repository\SiteUserRepository;
 use App\Repository\UserRepository;
 use App\Services\Db;
 use App\Views\View;
@@ -44,6 +47,19 @@ $userController = new UserController(
     )
 );
 
+$siteUserController = new SiteUserController(
+    new View(__DIR__ . '/../templates'),
+    new SiteUserRepository(
+        new Db(
+            new PDO(
+                'mysql:host=' . $dbSettings['host'] . ';dbname=' . $dbSettings['dbname'],
+                $dbSettings['user'],
+                $dbSettings['password']
+            )
+        )
+    )
+);
+
 
 $router->get('/', [$mainController, 'show']);
 $router->get('/create', [$userController, 'createForm']);
@@ -52,6 +68,9 @@ $router->get('/{id:number}/edit', [$userController, 'editForm']);
 $router->post('/create', [$userController, 'createUser']);
 $router->post('/{id:number}/edit', [$userController, 'editUser']);
 $router->post('/{id:number}/delete', [$userController, 'deleteUser']);
+$router->get('/login', [$siteUserController, 'authForm']);
+$router->post('/login', [$siteUserController, 'login']);
+$router->post('/logout', [$siteUserController, 'logout']);
 
 $response = $router->dispatch($request);
 
