@@ -51,7 +51,7 @@ class SiteUserController
             $this->siteUser->signUp($request->getParsedBody());
             return new RedirectResponse('/login');
         } else {
-            $error = 'The password and password confirmation files do not match to each other';
+            $error = 'The password and password confirmation fields do not match to each other';
             return new HtmlResponse($this->twig->render('sign-up.php', compact('error')));
         }
     }

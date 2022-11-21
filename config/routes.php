@@ -30,7 +30,7 @@ $pdo = new PDO(
 );
 
 $twig = new Environment(new FilesystemLoader(__DIR__ . '/../templates'));
-$twig->addGlobal('sessionId', $_SESSION['id']);
+$twig->addGlobal('sessionId', $_SESSION);
 
 $mainController = new MainController(
     $twig,

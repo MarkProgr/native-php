@@ -12,7 +12,7 @@ class AuthMiddleware implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        session_start();
+//        session_start();
 
         if (!empty($_SESSION)) {
             return $handler->handle($request);

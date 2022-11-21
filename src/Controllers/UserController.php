@@ -74,6 +74,7 @@ class UserController
     {
         $uploadedFile = $request->getUploadedFiles();
         $file = $uploadedFile['image'];
+//        var_dump($file->getClientFilename());
 
         if (!$file->getClientFilename()) {
             return null;
@@ -83,6 +84,7 @@ class UserController
         $uniqueImageName = md5(uniqid($imageName)) . strstr($imageName, '.');
 
         $newTmpName = __DIR__ . '/../../public/uploads/' . $uniqueImageName;
+
         $file->moveTo($newTmpName);
 
         return $uniqueImageName;

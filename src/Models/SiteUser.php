@@ -31,7 +31,7 @@ class SiteUser
         return $this->login;
     }
 
-    public function getPassword(): int
+    public function getPassword(): string
     {
         return $this->password;
     }

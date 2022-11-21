@@ -15,7 +15,7 @@
                     <a class="nav-link active" aria-current="page" href="/create">Create User</a>
                 </li>
             </ul>
-            {% if sessionId is same as(null) %}
+            {% if sessionId is same as([]) %}
             <a class="btn btn-light" href="/login">Login</a>
                 <a class="btn btn-light" href="/sign-up">Sign Up</a>
             {% endif %}

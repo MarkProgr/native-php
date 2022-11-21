@@ -22,11 +22,11 @@ class SiteUserRepository
             static::class
         );
 
-        if (!password_verify($params['password'], $siteUser[0]['password'])) {
+        if (empty($siteUser)) {
             return null;
         }
 
-        if (empty($siteUser)) {
+        if (!password_verify($params['password'], $siteUser[0]['password'])) {
             return null;
         }
 
