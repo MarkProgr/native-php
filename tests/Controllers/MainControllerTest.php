@@ -7,6 +7,7 @@ use App\Repository\UserRepository;
 use App\Views\View;
 use Laminas\Diactoros\Response;
 use PHPUnit\Framework\TestCase;
+use Twig\Environment;
 
 class MainControllerTest extends TestCase
 {
@@ -15,9 +16,9 @@ class MainControllerTest extends TestCase
         $userRepMock = $this->createMock(UserRepository::class);
         $userRepMock->method('selectAll')->willReturn([]);
 
-        $viewMock = $this->createMock(View::class);
+        $twigMock = $this->createMock(Environment::class);
 
-        $mainController = new MainController($viewMock, $userRepMock);
+        $mainController = new MainController($twigMock, $userRepMock);
 
         $this->assertInstanceOf(Response::class, $mainController->show());
     }

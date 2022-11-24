@@ -5,27 +5,29 @@ namespace Tests\Controllers;
 use App\Controllers\UserController;
 use App\Models\User;
 use App\Repository\UserRepository;
-use App\Views\View;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Laminas\Diactoros\ServerRequest;
+use Laminas\Diactoros\UploadedFile;
 use PHPUnit\Framework\TestCase;
+use Twig\Environment;
 
 class UserControllerTest extends TestCase
 {
     public $userRepMock;
-    public $viewMock;
+    public $twigMock;
+    public UserController $userController;
 
     protected function setUp(): void
     {
         $this->userRepMock = $this->createMock(UserRepository::class);
-        $this->viewMock = $this->createMock(View::class);
+        $this->twigMock = $this->createMock(Environment::class);
+        $this->userController = new UserController($this->twigMock, $this->userRepMock);
     }
 
     public function testCreateForm()
     {
-        $userController = new UserController($this->viewMock, $this->userRepMock);
-        $this->assertInstanceOf(HtmlResponse::class, $userController->createForm());
+        $this->assertInstanceOf(HtmlResponse::class, $this->userController->createForm());
     }
 
     public function testShowOne()
@@ -35,31 +37,48 @@ class UserControllerTest extends TestCase
 
         $this->userRepMock->method('selectById')->willReturn($userMock);
 
-        $userController = new UserController($this->viewMock, $this->userRepMock);
-
-        $this->assertInstanceOf(HtmlResponse::class, $userController->showOne($serverRequestMock, [1]));
+        $this->assertInstanceOf(HtmlResponse::class, $this->userController->showOne($serverRequestMock, [1]));
     }
 
     public function testCreateUser()
     {
+        $serverRequestMock = $this->createMock(ServerRequest::class);
+
+        $uploadedMock = $this->createMock(UploadedFile::class);
+
+        $serverRequestMock->method('getUploadedFiles')->willReturn(['image' => $uploadedMock]);
+        $serverRequestMock->method('getParsedBody')->willReturn(
+            ['email' => '1',
+                'name' => '2',
+                'gender' => '3',
+                'status' => '4']
+        );
+
         $this->userRepMock->expects($this->once())->method('create');
 
-        $userController = new UserController($this->viewMock, $this->userRepMock);
-
-        $this->assertInstanceOf(RedirectResponse::class, $userController->createUser());
+        $this->assertInstanceOf(RedirectResponse::class, $this->userController->createUser($serverRequestMock));
     }
 
     public function testEditUser()
     {
-        $serverReqMock = $this->createMock(ServerRequest::class);
+        $serverRequestMock = $this->createMock(ServerRequest::class);
+
+        $uploadedMock = $this->createMock(UploadedFile::class);
+
+        $serverRequestMock->method('getUploadedFiles')->willReturn(['image' => $uploadedMock]);
+
+        $serverRequestMock->method('getParsedBody')->willReturn(
+            ['email' => '1',
+                'name' => '2',
+                'gender' => '3',
+                'status' => '4']
+        );
 
         $this->userRepMock->expects($this->once())->method('update');
 
-        $userController = new UserController($this->viewMock, $this->userRepMock);
-
-        $this->assertInstanceOf(RedirectResponse::class, $userController->editUser(
-            $serverReqMock,
-            ['id' => '1', 'email' => '2', 'name' => '3', 'gender' => '4', 'status' => '5']
+        $this->assertInstanceOf(RedirectResponse::class, $this->userController->editUser(
+            $serverRequestMock,
+            ['id' => '1', 'email' => '2', 'name' => '3', 'gender' => '4', 'status' => '5', 'image_name' => '6']
         ));
     }
 
@@ -69,8 +88,32 @@ class UserControllerTest extends TestCase
 
         $this->userRepMock->expects($this->once())->method('delete');
 
-        $userController = new UserController($this->viewMock, $this->userRepMock);
+        $this->assertInstanceOf(RedirectResponse::class, $this->userController->deleteUser($serverReqMock, ['1']));
+    }
 
-        $this->assertInstanceOf(RedirectResponse::class, $userController->deleteUser($serverReqMock, ['1']));
+    public function testGenerateImageName()
+    {
+        $serverRequestMock = $this->createMock(ServerRequest::class);
+
+        $uploadedMock = $this->createMock(UploadedFile::class);
+
+        $uploadedMock->method('getClientFilename')->willReturn('1');
+
+        $serverRequestMock->method('getUploadedFiles')->willReturn(['image' => $uploadedMock]);
+
+        $this->assertIsString($this->userController->generateImageName($serverRequestMock));
+    }
+
+    public function testGenerateImageNameIfNull()
+    {
+        $serverRequestMock = $this->createMock(ServerRequest::class);
+
+        $uploadedMock = $this->createMock(UploadedFile::class);
+
+        $uploadedMock->method('getClientFilename')->willReturn('');
+
+        $serverRequestMock->method('getUploadedFiles')->willReturn(['image' => $uploadedMock]);
+
+        $this->assertNull($this->userController->generateImageName($serverRequestMock));
     }
 }

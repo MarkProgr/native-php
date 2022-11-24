@@ -17,9 +17,8 @@ class SiteUserRepository
     public function login(array $params): ?bool
     {
         $siteUser = $this->db->query(
-            'SELECT * FROM site_users WHERE login = :login AND password = :password',
-            [':login' => $params['login'],
-            ':password' => $params['password']],
+            'SELECT * FROM site_users WHERE login = :login',
+            [':login' => $params['login']],
             static::class
         );
 
@@ -27,11 +26,14 @@ class SiteUserRepository
             return null;
         }
 
+        if (!password_verify($params['password'], $siteUser[0]['password'])) {
+            return null;
+        }
+
         $currentTime = new DateTime();
         $this->db->query(
-            'UPDATE site_users SET last_visited = :lastVisited WHERE login = :login AND password = :password',
+            'UPDATE site_users SET last_visited = :lastVisited WHERE login = :login',
             [':login' => $params['login'],
-                ':password' => $params['password'],
                 ':lastVisited' => $currentTime->format('d-m-Y')],
             static::class
         );
@@ -43,8 +45,23 @@ class SiteUserRepository
         return true;
     }
 
+    public function signUp(array $params)
+    {
+        $password = $params['password'];
+        $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+
+        $this->db->query(
+            'INSERT INTO site_users (login, password) VALUES (:login, :password)',
+            [':login' => $params['login'],
+                ':password' => $passwordHash],
+            static::class
+        );
+    }
+
     public function logout(): void
     {
-        setcookie('PHPSESSID', '', time() - 60);
+        session_start();
+
+        $_SESSION = [];
     }
 }

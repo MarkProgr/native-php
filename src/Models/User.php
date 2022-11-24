@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use App\Services\Db;
-use Laminas\Diactoros\ServerRequest;
-
 class User
 {
     private int $id;
@@ -21,8 +18,7 @@ class User
         string $gender,
         string $status,
         ?string $imageName
-    )
-    {
+    ) {
         $this->id = $id;
         $this->email = $email;
         $this->name = $name;

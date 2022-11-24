@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Create Page</title>
-    <meta charset="utf-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-</head>
-<body>
-<?php require __DIR__ . '/navbar.php'; ?>
+{% extends "navbar.php" %}
+
+{% block title %}Create{% endblock %}
+
+{% block content %}
 <form id="form" method="post" action="/create" enctype="multipart/form-data">
     <div class="mb-3">
         <label for="email" class="form-label">Email address</label>
@@ -59,5 +55,4 @@
         }
     });
 </script>
-</body>
-</html>
+{% endblock %}

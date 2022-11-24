@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use DateTime;
-
 class SiteUser
 {
     private int $id;
@@ -33,7 +31,7 @@ class SiteUser
         return $this->login;
     }
 
-    public function getPassword(): int
+    public function getPassword(): string
     {
         return $this->password;
     }

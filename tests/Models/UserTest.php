@@ -7,33 +7,35 @@ use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
 {
+    public User $user;
+
+    protected function setUp(): void
+    {
+        $this->user = new User(1, 'mark@mark', 'Mark', 'Male', 'Active', '2');
+    }
+
     public function testGetId()
     {
-        $user = new User(1, 'mark@mark', 'Mark', 'Male', 'Active');
-        $this->assertIsInt($user->getId());
+        $this->assertIsInt($this->user->getId());
     }
 
     public function testGetEmail()
     {
-        $user = new User(1, 'mark@mark', 'Mark', 'Male', 'Active');
-        $this->assertIsString($user->getEmail());
+        $this->assertIsString($this->user->getEmail());
     }
 
     public function testGetName()
     {
-        $user = new User(1, 'mark@mark', 'Mark', 'Male', 'Active');
-        $this->assertIsString($user->getName());
+        $this->assertIsString($this->user->getName());
     }
 
     public function testGetGender()
     {
-        $user = new User(1, 'mark@mark', 'Mark', 'Male', 'Active');
-        $this->assertIsString($user->getGender());
+        $this->assertIsString($this->user->getGender());
     }
 
     public function testGetStatus()
     {
-        $user = new User(1, 'mark@mark', 'Mark', 'Male', 'Active');
-        $this->assertIsString($user->getStatus());
+        $this->assertIsString($this->user->getStatus());
     }
 }

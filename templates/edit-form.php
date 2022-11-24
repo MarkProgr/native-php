@@ -1,20 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Edit Page</title>
-    <meta charset="utf-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-</head>
-<body>
-<?php require __DIR__ . '/navbar.php'; ?>
-<form id="form" method="post" action="/<?= $user->getId() ?>/edit" enctype="multipart/form-data">
+{% extends "navbar.php" %}
+
+{% block title %}Edit{% endblock %}
+
+{% block content %}
+<form id="form" method="post" action="/{{ user.getId() }}/edit" enctype="multipart/form-data">
     <div class="mb-3">
         <label for="email" class="form-label">Email address</label>
-        <input id="email" value="<?= $user->getEmail() ?>" type="email" name="email" class="form-control field">
+        <input id="email" value="{{ user.getEmail() }}" type="email" name="email" class="form-control field">
     </div>
     <div class="mb-3">
         <label for="name" class="form-label">Your first and last name</label>
-        <input id="name" value="<?= $user->getName() ?>" name="name" type="text" class="form-control field">
+        <input id="name" value="{{ user.getName() }}" name="name" type="text" class="form-control field">
     </div>
     <div class="mb-3">
         <label for="name" class="form-label">Gender</label>
@@ -59,5 +55,4 @@
         }
     });
 </script>
-</body>
-</html>
+{% endblock %}
